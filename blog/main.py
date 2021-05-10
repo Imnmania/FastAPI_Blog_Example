@@ -51,3 +51,17 @@ def get_blog_by_id(id, response: Response, db: Session = Depends(get_db)):
             detail=f'Blog with id {id} not available'
             )
     return blog
+
+
+#======================== DELETE SINGLE BLOG USING ID ==================#
+@app.delete('/blog/{id}', status_code=status.HTTP_200_OK)
+def delete_blog(id, response: Response, db: Session = Depends(get_db)):
+    blog = db.query(models.Blog).filter(models.Blog.id == id).first()
+    db.query(models.Blog).filter(models.Blog.id == id).delete(synchronize_session = False)
+    db.commit()
+    if not blog:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, 
+            detail=f'Blog with id {id} not available'
+            )
+    return {'detail': 'Delete Successful'}
