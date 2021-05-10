@@ -1,6 +1,8 @@
 from .database import Base
 from sqlalchemy import Column, Integer, String
 
+
+#========================== DB TABLE MODELS ========================#
 class Blog(Base):
     __tablename__ = 'blogs'
 
