@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Depends
+from fastapi import FastAPI, Depends, status, Response
 from . import schemas
 from . import models
 from .database import engine, SessionLocal
@@ -22,7 +22,7 @@ def get_db():
 
 
 #============================ CREATE BLOG ==============================#
-@app.post('/blog')
+@app.post('/blog', status_code=status.HTTP_201_CREATED)
 def create_blog(request: schemas.Blog, db: Session = Depends(get_db)):
     # return request
     new_blog = models.Blog(title=request.title, body=request.body)
@@ -40,7 +40,10 @@ def get_all_blogs(db: Session = Depends(get_db)):
 
 
 #======================== GET SINGLE BLOG USING ID ==================#
-@app.get('/blog/{id}')
-def get_blog_by_id(id, db: Session = Depends(get_db)):
+@app.get('/blog/{id}', status_code=status.HTTP_200_OK)
+def get_blog_by_id(id, response: Response, db: Session = Depends(get_db)):
     blog = db.query(models.Blog).filter(models.Blog.id == id).first()
+    if not blog:
+        response.status_code = status.HTTP_404_NOT_FOUND
+        return {'detail': f'Blog with id {id} not available'}
     return blog
