@@ -3,6 +3,7 @@ from . import schemas
 from . import models
 from .database import engine, SessionLocal
 from sqlalchemy.orm import Session
+from fastapi.encoders import jsonable_encoder
 
 #========================= Initialize fastapi ==========================#
 app = FastAPI()
@@ -56,12 +57,34 @@ def get_blog_by_id(id, response: Response, db: Session = Depends(get_db)):
 #======================== DELETE SINGLE BLOG USING ID ==================#
 @app.delete('/blog/{id}', status_code=status.HTTP_200_OK)
 def delete_blog(id, response: Response, db: Session = Depends(get_db)):
-    blog = db.query(models.Blog).filter(models.Blog.id == id).first()
-    db.query(models.Blog).filter(models.Blog.id == id).delete(synchronize_session = False)
-    db.commit()
-    if not blog:
+    blog = db.query(models.Blog).filter(models.Blog.id == id)
+
+    if not blog.first():
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, 
             detail=f'Blog with id {id} not available'
             )
+
+    blog.delete(synchronize_session = False)
+    db.commit()
+
     return {'detail': 'Delete Successful'}
+
+
+
+#========================= UPDATE SINGLE BLOG USING ID ===================#
+@app.put('/blog/{id}', status_code=status.HTTP_202_ACCEPTED)
+def update_blog(id, request: schemas.Blog, db: Session = Depends(get_db)):
+
+    blog = db.query(models.Blog).filter(models.Blog.id == id)\
+
+    if not blog.first():
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, 
+            detail=f'Blog with id {id} not available'
+            )
+    
+    blog.update(jsonable_encoder(request), synchronize_session = False)
+    db.commit()
+    
+    return {'detail': 'Update Successful'}
