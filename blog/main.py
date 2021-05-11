@@ -41,17 +41,17 @@ def get_all_blogs(db: Session = Depends(get_db)):
 
 
 #======================== GET SINGLE BLOG USING ID ==================#
-@app.get('/blog/{id}', status_code=status.HTTP_200_OK)
+@app.get('/blog/{id}', status_code=status.HTTP_200_OK, response_model=schemas.ShowBlog)
 def get_blog_by_id(id, response: Response, db: Session = Depends(get_db)):
-    blog = db.query(models.Blog).filter(models.Blog.id == id).first()
-    if not blog:
+    blog = db.query(models.Blog).filter(models.Blog.id == id)
+    if not blog.first():
         # response.status_code = status.HTTP_404_NOT_FOUND
         # return {'detail': f'Blog with id {id} not available'}
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, 
             detail=f'Blog with id {id} not available'
             )
-    return blog
+    return blog.first()
 
 
 #======================== DELETE SINGLE BLOG USING ID ==================#
