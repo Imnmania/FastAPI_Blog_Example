@@ -1,3 +1,4 @@
+from fastapi.param_functions import Body
 from pydantic import BaseModel
 
 # @app.post('/blog')
@@ -9,8 +10,14 @@ class Blog(BaseModel):
     title: str
     body: str
 
+# # EXTENDING PREVIOUS MODELS
+# class ShowBlog(Blog):
+#     class Config:
+#         orm_mode = True
 
-class ShowBlog(Blog):
+# CREATING CUSTOM RESPONSE MODELS
+class ShowBlog(BaseModel):
+    title: str
+    body: str
     class Config:
         orm_mode = True
-

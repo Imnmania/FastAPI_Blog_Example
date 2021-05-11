@@ -1,4 +1,5 @@
 from fastapi import FastAPI, Depends, status, Response, HTTPException
+from typing import List
 from . import schemas
 from . import models
 from .database import engine, SessionLocal
@@ -34,7 +35,8 @@ def create_blog(request: schemas.Blog, db: Session = Depends(get_db)):
 
 
 #============================ GET ALL BLOGS =============================#
-@app.get('/blog', status_code=status.HTTP_200_OK)
+# @app.get('/blog', status_code=status.HTTP_200_OK)
+@app.get('/blog', status_code=status.HTTP_200_OK, response_model=List[schemas.ShowBlog])
 def get_all_blogs(db: Session = Depends(get_db)):
     blogs = db.query(models.Blog).all()
     return blogs
