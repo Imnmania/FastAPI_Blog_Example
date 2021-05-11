@@ -5,7 +5,8 @@ from . import models
 from .database import engine, SessionLocal
 from sqlalchemy.orm import Session
 from fastapi.encoders import jsonable_encoder
-from passlib.context import CryptContext
+from .hashing import Hash
+# from passlib.context import CryptContext
 
 #========================= Initialize fastapi ==========================#
 app = FastAPI()
@@ -95,8 +96,8 @@ def update_blog(id, request: schemas.Blog, db: Session = Depends(get_db)):
 
 
 
-#========================= HASHING PASSWORD ========================#
-pwd_ctx = CryptContext(schemes=['bcrypt'], deprecated='auto')
+# #========================= HASHING PASSWORD ========================#
+# pwd_ctx = CryptContext(schemes=['bcrypt'], deprecated='auto')
 
 
 
@@ -104,9 +105,9 @@ pwd_ctx = CryptContext(schemes=['bcrypt'], deprecated='auto')
 @app.post('/user')
 def create_user(request: schemas.User, db: Session = Depends(get_db)):
     
-    hashedPassword = pwd_ctx.hash(request.password)
+    # hashedPassword = pwd_ctx.hash(request.password)
 
-    new_user = models.User(username = request.username, email = request.email, password = hashedPassword)
+    new_user = models.User(username = request.username, email = request.email, password = Hash.bcrypt(request.password))
     db.add(new_user)
     db.commit()
     db.refresh(new_user)
