@@ -102,7 +102,7 @@ def update_blog(id, request: schemas.Blog, db: Session = Depends(get_db)):
 
 
 #========================== CREATE USER ============================#
-@app.post('/user')
+@app.post('/user', response_model=schemas.ShowUser, status_code=status.HTTP_201_CREATED)
 def create_user(request: schemas.User, db: Session = Depends(get_db)):
     
     # hashedPassword = pwd_ctx.hash(request.password)
@@ -113,3 +113,22 @@ def create_user(request: schemas.User, db: Session = Depends(get_db)):
     db.refresh(new_user)
 
     return new_user
+
+
+#=========================== GET ALL USERS ===========================#
+@app.get('/user', status_code=status.HTTP_200_OK, response_model = List[schemas.ShowUser])
+def get_all_users(db: Session = Depends(get_db)):
+    users = db.query(models.User).all()
+    return users
+
+
+
+#=========================== GET SINGLE USER WITH ID ===========================#
+@app.get('/user/{id}', status_code=status.HTTP_200_OK, response_model = schemas.ShowUser)
+def get_single_user(id, db: Session = Depends(get_db)):
+    user = db.query(models.User).filter(models.User.id == id).first()
+
+    if not user:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"USER ID:{id} DOES NOT EXIST")
+
+    return user
