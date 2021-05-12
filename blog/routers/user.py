@@ -36,9 +36,16 @@ def get_all_users(db: Session = Depends(get_db)):
 #=========================== GET SINGLE USER WITH ID ===========================#
 @router.get('/{id}', status_code=status.HTTP_200_OK, response_model = schemas.ShowUser)
 def get_single_user(id, db: Session = Depends(get_db)):
-    user = db.query(models.User).filter(models.User.id == id).first()
+    return userRepo.get_single_user(id, db)
 
-    if not user:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"USER ID:{id} DOES NOT EXIST")
 
-    return user
+#========================== DELETE USER ============================#
+@router.delete('/{id}', status_code=status.HTTP_200_OK)
+def delete_user(id, db: Session = Depends(get_db)):
+    return userRepo.delete_user(id, db)
+
+
+#========================== UPDATE USER ============================#
+@router.put('/{id}', status_code=status.HTTP_202_ACCEPTED)
+def update_user(id, request: schemas.User, db: Session = Depends(get_db)):
+    return userRepo.update_user(id, request, db)
