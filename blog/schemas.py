@@ -4,6 +4,9 @@ from typing import List
 
 from sqlalchemy.sql.sqltypes import Integer
 
+from typing import Optional
+
+
 # @app.post('/blog')
 # def create(title, body):
 #     return {'title': title, 'body': body}
@@ -50,7 +53,14 @@ class UserForBlog(BaseModel):
         orm_mode = True
 
 
+#============================ JWT MODELS ================================#
+class Token(BaseModel):
+    access_token: str
+    token_type: str
 
+
+class TokenData(BaseModel):
+    username: Optional[str] = None
 
 
 
