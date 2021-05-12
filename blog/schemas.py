@@ -24,6 +24,12 @@ class User(BaseModel):
     email: str
     password: str
 
+#========================== LOGIN BASE MODEL ========================#
+class Login(BaseModel):
+    username: str
+    password: str
+
+
 
 #========================== BLOG FOR USER RESPONSE ====================#
 class BlogForUser(BaseModel):
