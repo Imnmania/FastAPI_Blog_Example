@@ -26,7 +26,7 @@ def get_db():
 
 
 #============================ CREATE BLOG ==============================#
-@app.post('/blog', status_code=status.HTTP_201_CREATED)
+@app.post('/blog', status_code=status.HTTP_201_CREATED, tags=['Blogs'])
 def create_blog(request: schemas.Blog, db: Session = Depends(get_db)):
     # return request
     new_blog = models.Blog(title=request.title, body=request.body)
@@ -38,14 +38,14 @@ def create_blog(request: schemas.Blog, db: Session = Depends(get_db)):
 
 #============================ GET ALL BLOGS =============================#
 # @app.get('/blog', status_code=status.HTTP_200_OK)
-@app.get('/blog', status_code=status.HTTP_200_OK, response_model=List[schemas.ShowBlog])
+@app.get('/blog', status_code=status.HTTP_200_OK, response_model=List[schemas.ShowBlog], tags=['Blogs'])
 def get_all_blogs(db: Session = Depends(get_db)):
     blogs = db.query(models.Blog).all()
     return blogs
 
 
 #======================== GET SINGLE BLOG USING ID ==================#
-@app.get('/blog/{id}', status_code=status.HTTP_200_OK, response_model=schemas.ShowBlog)
+@app.get('/blog/{id}', status_code=status.HTTP_200_OK, response_model=schemas.ShowBlog, tags=['Blogs'])
 def get_blog_by_id(id, response: Response, db: Session = Depends(get_db)):
     blog = db.query(models.Blog).filter(models.Blog.id == id)
     if not blog.first():
@@ -59,7 +59,7 @@ def get_blog_by_id(id, response: Response, db: Session = Depends(get_db)):
 
 
 #======================== DELETE SINGLE BLOG USING ID ==================#
-@app.delete('/blog/{id}', status_code=status.HTTP_200_OK)
+@app.delete('/blog/{id}', status_code=status.HTTP_200_OK, tags=['Blogs'])
 def delete_blog(id, response: Response, db: Session = Depends(get_db)):
     blog = db.query(models.Blog).filter(models.Blog.id == id)
 
@@ -77,7 +77,7 @@ def delete_blog(id, response: Response, db: Session = Depends(get_db)):
 
 
 #========================= UPDATE SINGLE BLOG USING ID ===================#
-@app.put('/blog/{id}', status_code=status.HTTP_202_ACCEPTED)
+@app.put('/blog/{id}', status_code=status.HTTP_202_ACCEPTED, tags=['Blogs'])
 def update_blog(id, request: schemas.Blog, db: Session = Depends(get_db)):
 
     blog = db.query(models.Blog).filter(models.Blog.id == id)\
@@ -102,7 +102,7 @@ def update_blog(id, request: schemas.Blog, db: Session = Depends(get_db)):
 
 
 #========================== CREATE USER ============================#
-@app.post('/user', response_model=schemas.ShowUser, status_code=status.HTTP_201_CREATED)
+@app.post('/user', response_model=schemas.ShowUser, status_code=status.HTTP_201_CREATED, tags=['Blogs'])
 def create_user(request: schemas.User, db: Session = Depends(get_db)):
     
     # hashedPassword = pwd_ctx.hash(request.password)
@@ -116,7 +116,7 @@ def create_user(request: schemas.User, db: Session = Depends(get_db)):
 
 
 #=========================== GET ALL USERS ===========================#
-@app.get('/user', status_code=status.HTTP_200_OK, response_model = List[schemas.ShowUser])
+@app.get('/user', status_code=status.HTTP_200_OK, response_model = List[schemas.ShowUser], tags=['Users'])
 def get_all_users(db: Session = Depends(get_db)):
     users = db.query(models.User).all()
     return users
@@ -124,7 +124,7 @@ def get_all_users(db: Session = Depends(get_db)):
 
 
 #=========================== GET SINGLE USER WITH ID ===========================#
-@app.get('/user/{id}', status_code=status.HTTP_200_OK, response_model = schemas.ShowUser)
+@app.get('/user/{id}', status_code=status.HTTP_200_OK, response_model = schemas.ShowUser, tags=['Users'])
 def get_single_user(id, db: Session = Depends(get_db)):
     user = db.query(models.User).filter(models.User.id == id).first()
 
