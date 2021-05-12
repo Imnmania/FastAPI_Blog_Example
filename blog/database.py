@@ -18,3 +18,10 @@ SessionLocal = sessionmaker(bind=engine, autocommit=False, autoflush=False)
 #================================ INITIALIZE THE BASE ================================#
 Base = declarative_base()
 
+#========================= GET DB FOR SESSION ==========================#
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()

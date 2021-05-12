@@ -2,6 +2,8 @@ from fastapi.param_functions import Body
 from pydantic import BaseModel
 from typing import List
 
+from sqlalchemy.sql.sqltypes import Integer
+
 # @app.post('/blog')
 # def create(title, body):
 #     return {'title': title, 'body': body}
@@ -25,6 +27,7 @@ class User(BaseModel):
 
 #========================== BLOG FOR USER RESPONSE ====================#
 class BlogForUser(BaseModel):
+    id: int
     title: str
     body: str
 
@@ -33,6 +36,7 @@ class BlogForUser(BaseModel):
 
 #========================== USER FOR BLOG RESPONSE ====================#
 class UserForBlog(BaseModel):
+    id: str
     username: str
     email: str
 
@@ -45,6 +49,8 @@ class UserForBlog(BaseModel):
 
 
 # CREATING CUSTOM RESPONSE MODELS
+
+#=========================== USER RESPONSE MODEL ========================#
 class ShowUser(BaseModel):
     username: str
     email: str
@@ -54,6 +60,7 @@ class ShowUser(BaseModel):
         orm_mode = True
 
 
+#=========================== BLOG RESPONSE MODEL ========================#
 class ShowBlog(BaseModel):
     title: str
     body: str
