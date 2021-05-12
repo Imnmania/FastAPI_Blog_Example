@@ -52,6 +52,7 @@ class UserForBlog(BaseModel):
 
 #=========================== USER RESPONSE MODEL ========================#
 class ShowUser(BaseModel):
+    id: int
     username: str
     email: str
     blogs: List[BlogForUser] = []
@@ -62,6 +63,7 @@ class ShowUser(BaseModel):
 
 #=========================== BLOG RESPONSE MODEL ========================#
 class ShowBlog(BaseModel):
+    id: int
     title: str
     body: str
     creator: UserForBlog

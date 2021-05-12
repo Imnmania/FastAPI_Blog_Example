@@ -7,6 +7,9 @@ from sqlalchemy.orm import Session
 from fastapi.encoders import jsonable_encoder
 from ..hashing import Hash
 
+### Repository Import
+from ..repository import userRepo
+
 
 
 
@@ -20,22 +23,13 @@ router = APIRouter(
 #========================== CREATE USER ============================#
 @router.post('/', response_model=schemas.ShowUser, status_code=status.HTTP_201_CREATED)
 def create_user(request: schemas.User, db: Session = Depends(get_db)):
-    
-    # hashedPassword = pwd_ctx.hash(request.password)
-
-    new_user = models.User(username = request.username, email = request.email, password = Hash.bcrypt(request.password))
-    db.add(new_user)
-    db.commit()
-    db.refresh(new_user)
-
-    return new_user
+    return userRepo.create_user(db, request)
 
 
 #=========================== GET ALL USERS ===========================#
 @router.get('/', status_code=status.HTTP_200_OK, response_model = List[schemas.ShowUser])
 def get_all_users(db: Session = Depends(get_db)):
-    users = db.query(models.User).all()
-    return users
+    return userRepo.get_all_users(db)
 
 
 
