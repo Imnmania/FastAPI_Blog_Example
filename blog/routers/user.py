@@ -10,12 +10,15 @@ from ..hashing import Hash
 
 
 
-router = APIRouter()
+router = APIRouter(
+    tags=['Users'],
+    prefix='/user'
+)
 
 
 
 #========================== CREATE USER ============================#
-@router.post('/user', response_model=schemas.ShowUser, status_code=status.HTTP_201_CREATED, tags=['Users'])
+@router.post('/', response_model=schemas.ShowUser, status_code=status.HTTP_201_CREATED)
 def create_user(request: schemas.User, db: Session = Depends(get_db)):
     
     # hashedPassword = pwd_ctx.hash(request.password)
@@ -29,7 +32,7 @@ def create_user(request: schemas.User, db: Session = Depends(get_db)):
 
 
 #=========================== GET ALL USERS ===========================#
-@router.get('/user', status_code=status.HTTP_200_OK, response_model = List[schemas.ShowUser], tags=['Users'])
+@router.get('/', status_code=status.HTTP_200_OK, response_model = List[schemas.ShowUser])
 def get_all_users(db: Session = Depends(get_db)):
     users = db.query(models.User).all()
     return users
@@ -37,7 +40,7 @@ def get_all_users(db: Session = Depends(get_db)):
 
 
 #=========================== GET SINGLE USER WITH ID ===========================#
-@router.get('/user/{id}', status_code=status.HTTP_200_OK, response_model = schemas.ShowUser, tags=['Users'])
+@router.get('/{id}', status_code=status.HTTP_200_OK, response_model = schemas.ShowUser)
 def get_single_user(id, db: Session = Depends(get_db)):
     user = db.query(models.User).filter(models.User.id == id).first()
 
