@@ -29,7 +29,7 @@ def get_db():
 @app.post('/blog', status_code=status.HTTP_201_CREATED, tags=['Blogs'])
 def create_blog(request: schemas.Blog, db: Session = Depends(get_db)):
     # return request
-    new_blog = models.Blog(title=request.title, body=request.body)
+    new_blog = models.Blog(title=request.title, body=request.body, user_id=1)
     db.add(new_blog)
     db.commit()
     db.refresh(new_blog)
@@ -102,7 +102,7 @@ def update_blog(id, request: schemas.Blog, db: Session = Depends(get_db)):
 
 
 #========================== CREATE USER ============================#
-@app.post('/user', response_model=schemas.ShowUser, status_code=status.HTTP_201_CREATED, tags=['Blogs'])
+@app.post('/user', response_model=schemas.ShowUser, status_code=status.HTTP_201_CREATED, tags=['Users'])
 def create_user(request: schemas.User, db: Session = Depends(get_db)):
     
     # hashedPassword = pwd_ctx.hash(request.password)
